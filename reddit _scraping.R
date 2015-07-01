@@ -64,7 +64,7 @@ generate_queries <- function() {
         
         items <- factor()
         for (item in keywords) {
-                new.item <- paste("http://www.reddit.com/search.json?q=", item, "&limit=100", sep="")
+                new.item <- paste("http://www.reddit.com/search.json?q=", item, "&limit=100&sort=new", sep="")
                 items <- c(items, new.item)
         }
         queries <<- items
@@ -81,9 +81,9 @@ get_queries <- function(){
         output <- data.frame()
         
         for (i in length(queries)) {
-                json <- fromJSON (queries[i])
+                json <- fromJSON (queries[1])
                 parent_data <- json$data$children$data
-                clean <- parent_data[ ,c(45, 51, 26)]
+                clean <- parent_data[ ,c(12, 40, 18, 43, 4, 49, 24, 25, 38, 41)]
                 output <- rbind(output, clean)
         }
         
@@ -104,7 +104,12 @@ generate_html <- function(){
         html <- readLines("./output.html")
         html <- gsub("&lt;", "<", html)
         html <- gsub("&gt;", ">", html)
-        write(html, file = "./output.html")       
+        write(html, file = "./output.html") 
+        
+        cat ("Hurray, you nailed it! The Reddit query -", keywords, "- was sucessful. The output files were stored here: ")
+        cat ("\n", getwd())
 }
 
 generate_html()
+
+
